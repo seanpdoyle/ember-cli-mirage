@@ -105,6 +105,7 @@ module('mirage:db#find', {
     db = new Db();
     db.createCollection('contacts');
     db.contacts.insert([
+      {id: 1, name: 'Zelda'},
       {id: 2, name: 'Link'},
       {id: 'abc', name: 'Ganon'}
     ]);
@@ -140,6 +141,12 @@ test('returns a record whose id is a string that start with numbers', function(a
 
   var contact = db.contacts.find('123-456');
   assert.deepEqual(contact, {id: '123-456', name: 'Epona'});
+});
+
+test('returns multiple record that matche an arrya of ids', function(assert) {
+  var contacts = db.contacts.find([1, 2]);
+
+  assert.deepEqual(contacts, [{id: 1, name: 'Zelda'}, {id: 2, name: 'Link'}]);
 });
 
 

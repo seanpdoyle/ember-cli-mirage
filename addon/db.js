@@ -74,7 +74,20 @@ export default function() {
     return returnData;
   };
 
-  this._find = function(collection, id) {
+  this._find = function(collection, ids) {
+    var _this = this;
+
+    if (Ember.isArray(ids)) {
+      return ids.map(function(id) {
+        return _this._findRecordForId(collection, id);
+      });
+
+    } else {
+      return this._findRecordForId(collection, ids);
+    }
+  };
+
+  this._findRecordForId = function(collection, id) {
     // If parses, coerce to integer
     if (typeof id === "string" && allDigitsRegex.test(id)) {
       id = parseInt(id, 10);
