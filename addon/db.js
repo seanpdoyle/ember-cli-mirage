@@ -128,6 +128,16 @@ export default function() {
         record[attr] = attrs[attr];
       });
 
+    } else if (Ember.isArray(target)) {
+      var ids = target;
+      var records = this._find(collection, ids);
+
+      records.forEach(function(record) {
+        Object.keys(attrs).forEach(function(attr) {
+          record[attr] = attrs[attr];
+        });
+      });
+
     } else if (typeof target === 'object') {
       var query = target;
       var records = this._where(collection, query);
@@ -150,6 +160,14 @@ export default function() {
       var record = this._find(collection, target);
       var index = this[collection].indexOf(record);
       this[collection].splice(index, 1);
+
+    } else if (Ember.isArray(target)) {
+      var records = this._find(collection, target);
+      records.forEach(function(record) {
+        var index = _this[collection].indexOf(record);
+        _this[collection].splice(index, 1);
+      });
+
     } else if (typeof target === 'object') {
       var records = this._where(collection, target);
       records.forEach(function(record) {
