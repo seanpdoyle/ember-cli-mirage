@@ -57,7 +57,7 @@ export default function() {
     });
   };
 
-  this.all = function(collection, data) {
+  this.all = function(collection) {
     var records = this[collection]._records;
 
     return records.map(function(record) {
@@ -66,7 +66,6 @@ export default function() {
   };
 
   this.insert = function(collection, data) {
-    var _this = this;
     var copy = data ? JSON.parse(JSON.stringify(data)) : {};
     var records = this[collection]._records;
     var returnData;
@@ -78,7 +77,7 @@ export default function() {
       }
 
       records.push(attrs);
-      returnData = JSON.parse(JSON.stringify(attrs))
+      returnData = JSON.parse(JSON.stringify(attrs));
 
     } else {
       returnData = [];
@@ -91,7 +90,7 @@ export default function() {
         returnData.push(attrs);
         returnData = returnData.map(function(record) {
           return JSON.parse(JSON.stringify(record));
-        })
+        });
       });
     }
 
@@ -99,9 +98,6 @@ export default function() {
   };
 
   this.find = function(collection, ids) {
-    var _this = this;
-    var records;
-
     if (Ember.isArray(ids)) {
       var records = this._findRecords(collection, ids)
         .filter(function(record) {
@@ -129,6 +125,8 @@ export default function() {
   };
 
   this.update = function(collection, attrs, target) {
+    var records;
+
     if (typeof target === 'undefined') {
       this[collection]._records.forEach(function(record) {
         Object.keys(attrs).forEach(function(attr) {
@@ -146,7 +144,7 @@ export default function() {
 
     } else if (Ember.isArray(target)) {
       var ids = target;
-      var records = this._findRecords(collection, ids);
+      records = this._findRecords(collection, ids);
 
       records.forEach(function(record) {
         Object.keys(attrs).forEach(function(attr) {
@@ -156,7 +154,7 @@ export default function() {
 
     } else if (typeof target === 'object') {
       var query = target;
-      var records = this._findRecordsWhere(collection, query);
+      records = this._findRecordsWhere(collection, query);
 
       records.forEach(function(record) {
         Object.keys(attrs).forEach(function(attr) {
@@ -167,8 +165,8 @@ export default function() {
   };
 
   this.remove = function(collection, target) {
-    var _this = this;
     var _collection = this[collection];
+    var records;
 
     if (typeof target === 'undefined') {
       _collection._records = [];
@@ -179,14 +177,14 @@ export default function() {
       _collection._records.splice(index, 1);
 
     } else if (Ember.isArray(target)) {
-      var records = this._findRecords(collection, target);
+      records = this._findRecords(collection, target);
       records.forEach(function(record) {
         var index = _collection._records.indexOf(record);
         _collection._records.splice(index, 1);
       });
 
     } else if (typeof target === 'object') {
-      var records = this._findRecordsWhere(collection, target);
+      records = this._findRecordsWhere(collection, target);
       records.forEach(function(record) {
         var index = _collection._records.indexOf(record);
         _collection._records.splice(index, 1);
@@ -196,12 +194,12 @@ export default function() {
 
 
   /*
-    Private methods
+    Private methods.
+
+    These return the actual db objects, whereas the public
+    API query methods return copies.
   */
 
-  /*
-    Returns the actual db object.
-  */
   this._findRecord = function(collection, id) {
     // If parses, coerce to integer
     if (typeof id === "string" && allDigitsRegex.test(id)) {
@@ -215,9 +213,6 @@ export default function() {
     return record;
   };
 
-  /*
-    Returns the actual db objects.
-  */
   this._findRecords = function(collection, ids) {
     var _this = this;
 
@@ -228,9 +223,6 @@ export default function() {
     return records;
   };
 
-  /*
-    Returns the actual db objects.
-  */
   this._findRecordsWhere = function(collection, query) {
     var records = this[collection]._records;
 

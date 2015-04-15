@@ -26,7 +26,7 @@ export default {
       data[key] = model;
 
     } else {
-      data[key] = db[collection];
+      data[key] = db[collection].all();
     }
 
     return data;
@@ -74,7 +74,7 @@ export default {
           owner = model;
 
         } else {
-          data[key] = db[collection];
+          data[key] = db[collection].all();
         }
       }
     });
@@ -106,7 +106,7 @@ export default {
     if (id) {
       data[type] = db[collection].find(id);
     } else {
-      data[collection] = db[collection];
+      data[collection] = db[collection].all();
     }
 
     return data;
