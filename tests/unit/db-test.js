@@ -254,7 +254,8 @@ module('mirage:db#update', {
     db.contacts.insert([
       {id: 1, name: 'Link', evil: false},
       {id: 2, name: 'Zelda', evil: false},
-      {id: 3, name: 'Ganon', evil: true}
+      {id: 3, name: 'Ganon', evil: true},
+      {id: '123-abc', name: 'Epona', evil: false}
     ]);
   },
   afterEach: function() {
@@ -268,7 +269,8 @@ test('it can update the whole collection', function(assert) {
   assert.deepEqual(db.contacts.all(), [
     {id: 1, name: 'Sam', evil: false},
     {id: 2, name: 'Sam', evil: false},
-    {id: 3, name: 'Sam', evil: false}
+    {id: 3, name: 'Sam', evil: false},
+    {id: '123-abc', name: 'Sam', evil: false}
   ]);
 });
 
@@ -280,12 +282,10 @@ test('it can update a record by id', function(assert) {
 });
 
 test('it can update a record by id when the id is a string', function(assert) {
-  db.contacts.insert({id: '123-abc', name: 'Epona', evil: true});
-  db.contacts.update('123-abc', { name: 'Epona', evil: false });
-
+  db.contacts.update({ evil: true }, '123-abc');
   var epona = db.contacts.find('123-abc');
 
-  assert.deepEqual(epona, {id: '123-abc', name: 'Epona', evil: false});
+  assert.deepEqual(epona, {id: '123-abc', name: 'Epona', evil: true});
 });
 
 test('it can update multiple records by ids', function(assert) {
@@ -304,7 +304,8 @@ test('it can update records by query', function(assert) {
   assert.deepEqual(db.contacts.all(), [
     {id: 1, name: 'Sam', evil: false},
     {id: 2, name: 'Sam', evil: false},
-    {id: 3, name: 'Ganon', evil: true}
+    {id: 3, name: 'Ganon', evil: true},
+    {id: '123-abc', name: 'Sam', evil: false}
   ]);
 });
 
@@ -316,7 +317,8 @@ module('mirage:db#remove', {
     db.contacts.insert([
       {id: 1, name: 'Link', evil: false},
       {id: 2, name: 'Zelda', evil: false},
-      {id: 3, name: 'Ganon', evil: true}
+      {id: 3, name: 'Ganon', evil: true},
+      {id: '123-abc', name: 'Epona', evil: false}
     ]);
   },
   afterEach: function() {
@@ -330,20 +332,20 @@ test('it can remove an entire collection', function(assert) {
   assert.deepEqual(db.contacts.all(), []);
 });
 
-test('it can remove a single record', function(assert) {
+test('it can remove a single record by id', function(assert) {
   db.contacts.remove(1);
 
   assert.deepEqual(db.contacts.all(), [
     {id: 2, name: 'Zelda', evil: false},
     {id: 3, name: 'Ganon', evil: true},
+    {id: '123-abc', name: 'Epona', evil: false}
   ]);
 });
 
-test('it can remove a single record then the id is a string', function(assert) {
-  db.contacts.insert({id: '123-abc', name: 'Epona', evil: true});
+test('it can remove a single record when the id is a string', function(assert) {
   db.contacts.remove('123-abc');
 
-  assert.deepEqual(db.contacts, [
+  assert.deepEqual(db.contacts.all(), [
     {id: 1, name: 'Link', evil: false},
     {id: 2, name: 'Zelda', evil: false},
     {id: 3, name: 'Ganon', evil: true},
@@ -354,7 +356,8 @@ test('it can remove multiple records by ids', function(assert) {
   db.contacts.remove([1, 2]);
 
   assert.deepEqual(db.contacts.all(), [
-    {id: 3, name: 'Ganon', evil: true}
+    {id: 3, name: 'Ganon', evil: true},
+    {id: '123-abc', name: 'Epona', evil: false}
   ]);
 });
 
