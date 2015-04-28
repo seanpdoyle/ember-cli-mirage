@@ -20,7 +20,6 @@ module.exports = {
       });
       app.import(app.bowerDirectory + '/ember-inflector/ember-inflector.js');
       app.import(app.bowerDirectory + '/lodash/lodash.js');
-      app.import(app.bowerDirectory + '/underscore/underscore.js');
     }
   },
 
